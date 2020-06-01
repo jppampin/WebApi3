@@ -23,6 +23,12 @@ namespace WebApi.Controllers
             _logger = logger;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Post()
+        {
+            return await Task.FromResult(Ok());
+        }
+
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
