@@ -9,5 +9,14 @@ namespace WebApi.Models
         {
             return services.AddSingleton<IOrderRepository, MemoryOrderRepository>();
         }
+
+        public static IServiceCollection AddDocumentation(this IServiceCollection services)
+        {
+            return services.AddOpenApiDocument(settings => {
+                settings.Title = "Learning API";
+                settings.Version = "v1";
+                settings.DocumentName = "v1";
+            });
+        }
     }
 }

@@ -1,4 +1,6 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Models;
 using WebApi.Repositories;
 
 namespace WebApi.Controllers
@@ -18,6 +20,20 @@ public class OrderController: ControllerBase
     {
         var orders = repository.Get();
         return Ok(orders);
+    }
+
+    [HttpPost]
+    public IActionResult PostOrder(Order order)
+    {
+        var newOrder = new Order()
+        {
+            Id = Guid.NewGuid(),
+            ItemsIds = order.ItemsIds
+        };
+        
+        repository.Add(newOrder);
+
+        return CreatedAtAction(nameof(GetOrders), new { Id = order.Id});
     }
 }
 }

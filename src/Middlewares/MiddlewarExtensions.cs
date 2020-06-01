@@ -9,5 +9,14 @@ namespace WebApi.Middlewares
             builder.Map("/hello", _ => _.UseMiddleware<HelloMiddlewareMessage>());
             return builder.UseMiddleware<HelloMiddleware>();
         }
+
+        public static IApplicationBuilder UseApiSwagger(this IApplicationBuilder builder)
+        {
+            builder.UseOpenApi();
+            builder.UseSwaggerUi3();
+            return builder;
+        }
+
+        
     }
 }
