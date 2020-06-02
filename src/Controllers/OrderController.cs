@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Dtos;
+using WebApi.Filters;
 using WebApi.Models;
 using WebApi.Repositories;
 
@@ -47,6 +48,7 @@ public class OrderController: ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [OrderExists]
     public IActionResult PutOrder(Guid id, Order orderUpdated)
     {
         var order = repository.Get(id);
@@ -61,27 +63,29 @@ public class OrderController: ControllerBase
     }
 
     [HttpPatch("{id:guid}")]
+    [OrderExists]
     public IActionResult PatchOrder(Guid id, JsonPatchDocument<Order> orderPatched)
     {
+        // var order = repository.Get(id);
+        // if(order == null)
+        //     return NotFound();
+
         var order = repository.Get(id);
-        if(order == null)
-            return NotFound();
-
         orderPatched.ApplyTo(order);
-
         repository.Update(order);  
 
         return Ok(); 
     }
 
     [HttpDelete("{id:guid}")]
+    [OrderExists]
     public IActionResult DeletOrder(Guid id)
     {
-        var order = repository.Get(id);
-        if(order == null)
-        {
-            return NotFound();
-        }
+        // var order = repository.Get(id);
+        // if(order == null)
+        // {
+        //     return NotFound();
+        // }
 
         repository.Delete(id);
         return Ok();
