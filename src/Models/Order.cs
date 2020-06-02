@@ -6,8 +6,9 @@ namespace WebApi.Models
 {
     public class Order
     {
-        [JsonIgnore]
-        public Guid Id { get; set; }
+    
+        public virtual Guid Id { get; set; }
         public IEnumerable<String> ItemsIds {get; set;}
+        public string Currency { get; set; }
     }
 }
