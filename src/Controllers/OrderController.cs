@@ -10,6 +10,7 @@ namespace WebApi.Controllers
 {
 [Route("[controller]")]
 [ApiController]
+//[CustomExceptionAttribute]
 public class OrderController: ControllerBase
 {
     IOrderRepository repository;
@@ -61,6 +62,12 @@ public class OrderController: ControllerBase
 
         return Ok(); 
     }
+
+    [HttpGet("exception")]
+    public IActionResult GetException()
+    {
+        throw new ApplicationException("Testing exception");
+    } 
 
     [HttpPatch("{id:guid}")]
     [OrderExists]
