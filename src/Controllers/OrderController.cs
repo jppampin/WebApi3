@@ -44,6 +44,8 @@ public class OrderController: ControllerBase
         };
 
         repository.Add(newOrder);
+        repository.UnitOfWork.SaveEntitiesAsync();
+        
 
         return CreatedAtAction(nameof(GetOrders), new { Id = newOrder.Id});
     }

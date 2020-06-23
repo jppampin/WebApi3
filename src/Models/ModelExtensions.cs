@@ -7,7 +7,7 @@ namespace WebApi.Models
     {
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            return services.AddSingleton<IOrderRepository, MemoryOrderRepository>();
+            return services.AddScoped<IOrderRepository, OrderRepository>();
         }
 
         public static IServiceCollection AddDocumentation(this IServiceCollection services)

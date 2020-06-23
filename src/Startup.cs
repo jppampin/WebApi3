@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using WebApi.Data;
 using WebApi.Filters;
 using WebApi.Middlewares;
 using WebApi.Models;
@@ -32,6 +34,13 @@ namespace WebApi
                     .AddNewtonsoftJson();
             services.AddRepositories();
             services.AddDocumentation();
+            services.AddEntityFrameworkSqlite();
+            services.AddDbContext<OrderContext>( contextOptions =>
+                                                    contextOptions.UseSqlite(
+                                                        "Data Source=OrderDb.db"
+                                                        ,serverOptions => serverOptions.MigrationsAssembly(typeof(Startup).Assembly.FullName)
+                                                    )
+            );
             
         }
 
@@ -44,9 +53,9 @@ namespace WebApi
             }
 
             app.UseApiSwagger();
-            app.UseCustomMiddlewares();
+            //app.UseCustomMiddlewares();
             
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 

@@ -14,7 +14,7 @@ namespace WebApi.Repositories
 
         public OrderRepository(OrderContext context)
         {
-            context = context ?? throw new ArgumentNullException(nameof(context));
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public IUnitOfWork UnitOfWork => context;
