@@ -34,7 +34,7 @@ namespace WebApi.Filters
                     return;
                 }
 
-                var order = repository.Get(id);
+                var order = await repository.GetAsync(id);
 
                 if(order == null)
                 {

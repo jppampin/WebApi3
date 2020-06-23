@@ -22,14 +22,14 @@ public class OrderController: ControllerBase
     [HttpGet]
     public IActionResult GetOrders()
     {
-        var orders = repository.Get();
+        var orders = repository.GetAsync().Result;
         return Ok(orders);
     }
 
     [HttpGet("{id:guid}")]
     public IActionResult GetOrderById(Guid id)
     {
-        var order = repository.Get(id);
+        var order = repository.GetAsync(id).Result;
         return Ok(order);
     }
 
@@ -52,7 +52,7 @@ public class OrderController: ControllerBase
     [OrderExists]
     public IActionResult PutOrder(Guid id, Order orderUpdated)
     {
-        var order = repository.Get(id);
+        var order = repository.GetAsync(id).Result;
         if(order == null)
             return NotFound();
 
@@ -77,7 +77,7 @@ public class OrderController: ControllerBase
         // if(order == null)
         //     return NotFound();
 
-        var order = repository.Get(id);
+        var order = repository.GetAsync(id).Result;
         orderPatched.ApplyTo(order);
         repository.Update(order);  
 
@@ -94,7 +94,7 @@ public class OrderController: ControllerBase
         //     return NotFound();
         // }
 
-        repository.Delete(id);
+        // repository.Delete(id);
         return Ok();
     }
 }

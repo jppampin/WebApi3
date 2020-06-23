@@ -3,11 +3,14 @@ using System;
 using System.Collections.Generic;
 using WebApi.Models;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WebApi.Repositories
 {
     public class MemoryOrderRepository : IOrderRepository
     {
+        public IUnitOfWork UnitOfWork => throw new NotImplementedException();
+
         private IList<Order> orders { get; set;} = new List<Order>();
         public void Add(Order order)
         {
@@ -33,10 +36,30 @@ namespace WebApi.Repositories
             return this.orders.FirstOrDefault(o => o.Id == orderId);
         }
 
+        public Task<IEnumerable<Order>> GetAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Order> GetAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Update(Order order)
         {
             this.Delete(order.Id);
             this.Add(order);
+        }
+
+        Order IOrderRepository.Add(Order order)
+        {
+            throw new NotImplementedException();
+        }
+
+        Order IOrderRepository.Update(Order order)
+        {
+            throw new NotImplementedException();
         }
     }
 }
