@@ -41,6 +41,13 @@ namespace WebApi
                                                         ,serverOptions => serverOptions.MigrationsAssembly(typeof(Startup).Assembly.FullName)
                                                     )
             );
+            services.AddDbContext<ApiDbContext>( contextOptions =>
+                                                    contextOptions.UseSqlite(
+                                                        "Data Source=OrderDb.db"
+                                                        ,serverOptions => serverOptions.MigrationsAssembly(typeof(Startup).Assembly.FullName)
+                                                    )
+            );
+            services.AddUnitOfWork();
             
         }
 

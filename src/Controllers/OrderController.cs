@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Dtos;
@@ -14,22 +15,25 @@ namespace WebApi.Controllers
 public class OrderController: ControllerBase
 {
     IOrderRepository repository;
-    public OrderController(IOrderRepository repository)
+    WebApi.Repositories.Generic.IUnitOfWork unitOfWork;
+    public OrderController(IOrderRepository repository, WebApi.Repositories.Generic.IUnitOfWork unitOfWork)
     {
         this.repository = repository;
+        this.unitOfWork = unitOfWork;
     }
 
     [HttpGet]
-    public IActionResult GetOrders()
+    public async Task<IActionResult> GetOrders()
     {
-        var orders = repository.GetAsync().Result;
+        //var orders = repository.GetAsync().Result;
+        var orders = await unitOfWork.OrderRepository.ReadOnlyAsyncEntries;
         return Ok(orders);
     }
 
     [HttpGet("{id:guid}")]
-    public IActionResult GetOrderById(Guid id)
+    public async Task<IActionResult> GetOrderById(Guid id)
     {
-        var order = repository.GetAsync(id).Result;
+        var order = await repository.GetAsync(id);
         return Ok(order);
     }
 
@@ -43,8 +47,8 @@ public class OrderController: ControllerBase
             Currency = order.Currency
         };
 
-        repository.Add(newOrder);
-        repository.UnitOfWork.SaveEntitiesAsync();
+        unitOfWork.OrderRepository.Add(newOrder);
+        unitOfWork.CommitAsync();
         
 
         return CreatedAtAction(nameof(GetOrders), new { Id = newOrder.Id});
@@ -59,8 +63,10 @@ public class OrderController: ControllerBase
             return NotFound();
 
         order.ItemsIds = orderUpdated.ItemsIds;
+        order.Currency = orderUpdated.Currency;
 
-        repository.Update(order);  
+        unitOfWork.OrderRepository.Update(order);
+        unitOfWork.CommitAsync();  
 
         return Ok(); 
     }
