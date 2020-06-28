@@ -2,7 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using WebApi.Models;
 using WebApi.Repositories;
+using WebApi.Repositories.Generic;
 
 namespace WebApi.Filters
 {
@@ -13,11 +15,13 @@ namespace WebApi.Filters
 
         private class OrderExistsFilter : IAsyncActionFilter
         {
-            private IOrderRepository repository;
+            private Repositories.Generic.IUnitOfWork unitOfWork;
 
-            public OrderExistsFilter(IOrderRepository repository)
+            private IRepository<Order> Repository => unitOfWork.OrderRepository; 
+
+            public OrderExistsFilter(WebApi.Repositories.Generic.IUnitOfWork unitOfWork)
             {
-                this.repository = repository;
+                this.unitOfWork = unitOfWork;
             }
 
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -34,7 +38,7 @@ namespace WebApi.Filters
                     return;
                 }
 
-                var order = await repository.GetAsync(id);
+                var order = await Repository.GetByIdAsync(id);
 
                 if(order == null)
                 {

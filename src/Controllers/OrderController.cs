@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApi.Dtos;
 using WebApi.Filters;
 using WebApi.Models;
-using WebApi.Repositories;
+using WebApi.Repositories.Generic;
 
 namespace WebApi.Controllers
 {
@@ -14,26 +14,27 @@ namespace WebApi.Controllers
 //[CustomExceptionAttribute]
 public class OrderController: ControllerBase
 {
-    IOrderRepository repository;
     WebApi.Repositories.Generic.IUnitOfWork unitOfWork;
-    public OrderController(IOrderRepository repository, WebApi.Repositories.Generic.IUnitOfWork unitOfWork)
+
+    private IRepository<Order> Repository => unitOfWork.OrderRepository;
+    private Repositories.Generic.IUnitOfWork UnitOfWork => unitOfWork;
+    public OrderController(WebApi.Repositories.Generic.IUnitOfWork unitOfWork)
     {
-        this.repository = repository;
         this.unitOfWork = unitOfWork;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetOrders()
     {
-        //var orders = repository.GetAsync().Result;
-        var orders = await unitOfWork.OrderRepository.ReadOnlyAsyncEntries;
+        var orders = await Repository.GetAllAsync();
         return Ok(orders);
     }
 
     [HttpGet("{id:guid}")]
+    [OrderExists]
     public async Task<IActionResult> GetOrderById(Guid id)
     {
-        var order = await repository.GetAsync(id);
+        var order = await Repository.GetByIdAsync(id);
         return Ok(order);
     }
 
@@ -47,26 +48,25 @@ public class OrderController: ControllerBase
             Currency = order.Currency
         };
 
-        unitOfWork.OrderRepository.Add(newOrder);
-        unitOfWork.CommitAsync();
+        Repository.Add(newOrder);
+        UnitOfWork.CommitAsync();
         
-
         return CreatedAtAction(nameof(GetOrders), new { Id = newOrder.Id});
     }
 
     [HttpPut("{id:guid}")]
     [OrderExists]
-    public IActionResult PutOrder(Guid id, Order orderUpdated)
+    public async Task<IActionResult> PutOrder(Guid id, Order orderUpdated)
     {
-        var order = repository.GetAsync(id).Result;
+        var order = await Repository.GetByIdAsync(id);
         if(order == null)
             return NotFound();
 
         order.ItemsIds = orderUpdated.ItemsIds;
         order.Currency = orderUpdated.Currency;
 
-        unitOfWork.OrderRepository.Update(order);
-        unitOfWork.CommitAsync();  
+        Repository.Update(order);
+        UnitOfWork.CommitAsync();  
 
         return Ok(); 
     }
@@ -79,30 +79,27 @@ public class OrderController: ControllerBase
 
     [HttpPatch("{id:guid}")]
     [OrderExists]
-    public IActionResult PatchOrder(Guid id, JsonPatchDocument<Order> orderPatched)
+    public async Task<IActionResult> PatchOrder(Guid id, JsonPatchDocument<Order> orderPatched)
     {
-        // var order = repository.Get(id);
-        // if(order == null)
-        //     return NotFound();
-
-        var order = repository.GetAsync(id).Result;
+        var order = await Repository.GetByIdAsync(id);
+        
         orderPatched.ApplyTo(order);
-        repository.Update(order);  
+
+        Repository.Update(order);
+        UnitOfWork.CommitAsync();  
 
         return Ok(); 
     }
 
     [HttpDelete("{id:guid}")]
     [OrderExists]
-    public IActionResult DeletOrder(Guid id)
+    public async Task<IActionResult> DeleteOrder(Guid id)
     {
-        // var order = repository.Get(id);
-        // if(order == null)
-        // {
-        //     return NotFound();
-        // }
+        var order = await Repository.GetByIdAsync(id);
+        
+        Repository.Remove(order);
+        UnitOfWork.CommitAsync();
 
-        // repository.Delete(id);
         return Ok();
     }
 }

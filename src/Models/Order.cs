@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace WebApi.Models
 {
-    public class Order
+    public class Order: IEntity
     {
     
         public virtual Guid Id { get; set; }
