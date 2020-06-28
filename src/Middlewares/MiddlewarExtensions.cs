@@ -13,7 +13,11 @@ namespace WebApi.Middlewares
         public static IApplicationBuilder UseApiSwagger(this IApplicationBuilder builder)
         {
             builder.UseOpenApi();
-            builder.UseSwaggerUi3();
+            builder.UseSwaggerUi3( config =>
+                {
+                    config.Path = "";
+                }
+            );
             return builder;
         }
 

@@ -48,7 +48,7 @@ namespace WebApi
             }
 
             app.UseApiSwagger();
-            //app.UseCustomMiddlewares();
+            app.UseCustomMiddlewares();
             
             //app.UseHttpsRedirection();
 
