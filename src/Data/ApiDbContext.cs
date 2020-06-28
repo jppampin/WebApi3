@@ -14,10 +14,6 @@ namespace WebApi.Data
         protected  override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new OrderEntitySchemaDefinition());
-            builder.Entity<Order>().Property(e => e.ItemsIds)
-            .HasConversion(
-                v => string.Join(',', v),
-                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
             base.OnModelCreating(builder);
         }
 
