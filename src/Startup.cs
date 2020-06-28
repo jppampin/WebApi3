@@ -33,7 +33,7 @@ namespace WebApi
             services.AddControllers( config => config.Filters.Add(new HttpCustomExceptionFilter()))
                     .AddNewtonsoftJson();
             services.AddDocumentation();
-            services.AddEntityFrameworkSqlite();
+//            services.AddEntityFrameworkSqlite();
             services.AddApiDbContext("Data Source=OrderDb.db");
             services.AddUnitOfWork();
             

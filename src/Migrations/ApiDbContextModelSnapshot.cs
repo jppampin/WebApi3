@@ -31,36 +31,36 @@ namespace WebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders","order");
+                    b.ToTable("Orders");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("05284a3a-ce7b-48ed-b2f8-1db52f4e7db3"),
+                            Id = new Guid("9b1df6fe-30d0-4de3-8946-ad55ce6f41ff"),
                             Currency = "ARS",
                             ItemsIds = "1,2,3"
                         },
                         new
                         {
-                            Id = new Guid("fde167d5-8721-41d0-9503-65bd8f1af67b"),
+                            Id = new Guid("7b92e37f-f0d4-417d-89d7-3278ede73de3"),
                             Currency = "EUR",
                             ItemsIds = "1,2,3"
                         },
                         new
                         {
-                            Id = new Guid("9e99cf8b-ba6f-48ad-87ad-3e2127ffff21"),
+                            Id = new Guid("0ddc4a48-60ce-455e-98c9-20b1e4d73ff0"),
                             Currency = "USD",
                             ItemsIds = "1,2,3"
                         },
                         new
                         {
-                            Id = new Guid("4e7ac029-8816-426c-b689-447d213a7086"),
+                            Id = new Guid("1ace235f-d628-4c50-bd55-2c97ca1a7382"),
                             Currency = "BRL",
                             ItemsIds = "1,2,3"
                         },
                         new
                         {
-                            Id = new Guid("7f55bcef-c616-4e61-b15c-d867021b8699"),
+                            Id = new Guid("f8cea9e3-7fa9-4d4f-b3e9-0173952aa3ad"),
                             Currency = "???",
                             ItemsIds = "1,2,3"
                         });
