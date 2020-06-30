@@ -11,22 +11,26 @@ namespace WebApiTests
     public class InMemoryApplicationFactory<TStartup>
         : WebApplicationFactory<TStartup> where TStartup : class
     {
-        // protected override void ConfigureWebHost(IWebHostBuilder builder)
-        // {
-        //     builder
-        //         .UseEnvironment("Testing")
-        //         .ConfigureTestServices(
-        //             services  => 
-        //             {
-        //                 var options = new DbContextOptionsBuilde<ApiDbContext>()
-        //                     .UseInMemoryDatabase(Guid.NewGuid().ToString())
-        //                     .Options;
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        {
+            builder
+                .UseEnvironment("Testing")
+                .ConfigureTestServices(
+                    services  => 
+                    {
+                        var options = new DbContextOptionsBuilder<ApiDbContext>()
+                            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                            .Options;
                         
-        //                 services.AddScoped<ApiDbContext>(serviceProvider =>
-        //                     new TestCatalogContext(options));   
-        //             }
-        //         );
+                        var testApiContext = new TestApiContext(options);
+
+                        testApiContext.Database.EnsureCreated();
+                        
+                        services.AddScoped<ApiDbContext>(serviceProvider => testApiContext);
+                        
+                    }
+                );
                 
-        // }
+        }
     }
 }
