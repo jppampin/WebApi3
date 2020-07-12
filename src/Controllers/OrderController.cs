@@ -6,6 +6,7 @@ using WebApi.Dtos;
 using WebApi.Filters;
 using WebApi.Models;
 using WebApi.Repositories.Generic;
+using WebApi.Services;
 
 namespace WebApi.Controllers
 {
@@ -16,17 +17,22 @@ public class OrderController: ControllerBase
 {
     WebApi.Repositories.Generic.IUnitOfWork unitOfWork;
 
+    private IOrderService orderService;
+
     private IRepository<Order> Repository => unitOfWork.OrderRepository;
     private Repositories.Generic.IUnitOfWork UnitOfWork => unitOfWork;
-    public OrderController(WebApi.Repositories.Generic.IUnitOfWork unitOfWork)
+
+    private IOrderService OrderService => orderService;
+    public OrderController(WebApi.Repositories.Generic.IUnitOfWork unitOfWork, IOrderService orderService)
     {
         this.unitOfWork = unitOfWork;
+        this.orderService = orderService;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetOrders()
     {
-        var orders = await Repository.GetAllAsync();
+        var orders = await OrderService.GetOrdersAsync();
         return Ok(orders);
     }
 

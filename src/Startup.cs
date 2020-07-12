@@ -15,6 +15,7 @@ using WebApi.Data;
 using WebApi.Filters;
 using WebApi.Middlewares;
 using WebApi.Models;
+using WebApi.Services;
 
 namespace WebApi
 {
@@ -36,7 +37,7 @@ namespace WebApi
 //            services.AddEntityFrameworkSqlite();
             services.AddApiDbContext("Data Source=OrderDb.db");
             services.AddUnitOfWork();
-            
+            services.AddServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
