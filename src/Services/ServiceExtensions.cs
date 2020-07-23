@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using WebApi.Mappers;
 
 namespace WebApi.Services
 {
@@ -6,7 +7,10 @@ namespace WebApi.Services
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            return services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddSingleton<OrderMapper>();
+
+            return services;
         }
     }
 }
