@@ -31,8 +31,20 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers( config => config.Filters.Add(new HttpCustomExceptionFilter()))
-                    .AddNewtonsoftJson();
+            services.AddControllers( config => 
+                {
+                    config.Filters.Add<HttpCustomExceptionFilter>();
+                    config.Filters.Add<CustomModelErrorFilter>();
+                }
+            )
+            .AddNewtonsoftJson()
+            .AddValidations();
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+            
             services.AddDocumentation();
 //            services.AddEntityFrameworkSqlite();
             services.AddApiDbContext("Data Source=OrderDb.db");

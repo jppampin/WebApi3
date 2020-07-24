@@ -1,3 +1,5 @@
+using System.Reflection;
+using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using WebApi.Repositories;
 using WebApi.Repositories.Generic;
@@ -23,6 +25,14 @@ namespace WebApi.Models
                 settings.Version = "v1";
                 settings.DocumentName = "v1";
             });
+        }
+
+
+        public static IMvcBuilder AddValidations(this IMvcBuilder builder)
+        {
+            return builder.AddFluentValidation(config => 
+                config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly())
+            );
         }
     }
 }
